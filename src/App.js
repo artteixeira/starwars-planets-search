@@ -2,12 +2,16 @@ import React from 'react';
 
 import Table from './components/Table';
 import PlanetsProvider from './context/PlanetsProvider';
+import FiltersProvider from './context/FiltersProvider';
+import Filters from './components/Filters';
 
 function App() {
   return (
     <PlanetsProvider>
-      <span>Hello, App!</span>
-      <Table />
+      <FiltersProvider>
+        <Filters />
+        <Table />
+      </FiltersProvider>
     </PlanetsProvider>
   );
 }

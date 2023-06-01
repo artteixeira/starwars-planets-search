@@ -1,8 +1,13 @@
 import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
+import FiltersContext from '../context/FiltersContext';
 
 export default function Table() {
   const { planets } = useContext(PlanetsContext);
+  const { nameFilter,
+    comparisonFilter,
+    columnFilter,
+    valueFilter } = useContext(FiltersContext);
 
   return (
     <table>
@@ -24,23 +29,39 @@ export default function Table() {
         </tr>
       </thead>
       <tbody>
-        {planets.map((element, index) => (
-          <tr key={ index }>
-            <td>{element.name}</td>
-            <td>{element.rotation_period}</td>
-            <td>{element.orbital_period}</td>
-            <td>{element.diameter}</td>
-            <td>{element.climate}</td>
-            <td>{element.gravity}</td>
-            <td>{element.terrain}</td>
-            <td>{element.surface_water}</td>
-            <td>{element.population}</td>
-            <td>{element.films}</td>
-            <td>{element.created}</td>
-            <td>{element.edited}</td>
-            <td>{element.url}</td>
-          </tr>
-        ))}
+        {planets
+          .filter((element) => element.name.includes(nameFilter.nameFilter))
+          .filter((element) => {
+            switch (comparisonFilter.value) {
+            case 'maior que':
+              return Number(element[columnFilter.value]) > valueFilter.value
+                && element[columnFilter] !== 'unknown';
+            case 'igual a':
+              return Number(element[columnFilter.value]) === Number(valueFilter.value);
+            case 'menor que':
+              return Number(element[columnFilter.value]) < valueFilter.value
+                && element[columnFilter] !== 'unknown';
+            default:
+              return element;
+            }
+          })
+          .map((element, index) => (
+            <tr key={ index }>
+              <td>{element.name}</td>
+              <td>{element.rotation_period}</td>
+              <td>{element.orbital_period}</td>
+              <td>{element.diameter}</td>
+              <td>{element.climate}</td>
+              <td>{element.gravity}</td>
+              <td>{element.terrain}</td>
+              <td>{element.surface_water}</td>
+              <td>{element.population}</td>
+              <td>{element.films}</td>
+              <td>{element.created}</td>
+              <td>{element.edited}</td>
+              <td>{element.url}</td>
+            </tr>
+          ))}
       </tbody>
     </table>
   );
