@@ -1,13 +1,8 @@
 import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
-import FiltersContext from '../context/FiltersContext';
 
 export default function Table() {
-  const { planets } = useContext(PlanetsContext);
-  const { nameFilter,
-    comparisonFilter,
-    columnFilter,
-    valueFilter } = useContext(FiltersContext);
+  const { planets, nameFilter, filterPlanets } = useContext(PlanetsContext);
 
   return (
     <table>
@@ -30,21 +25,9 @@ export default function Table() {
       </thead>
       <tbody>
         {planets
-          .filter((element) => element.name.includes(nameFilter.nameFilter))
-          .filter((element) => {
-            switch (comparisonFilter.value) {
-            case 'maior que':
-              return Number(element[columnFilter.value]) > valueFilter.value
-                && element[columnFilter] !== 'unknown';
-            case 'igual a':
-              return Number(element[columnFilter.value]) === Number(valueFilter.value);
-            case 'menor que':
-              return Number(element[columnFilter.value]) < valueFilter.value
-                && element[columnFilter] !== 'unknown';
-            default:
-              return element;
-            }
-          })
+          .filter((element) => element.name.toLowerCase()
+            .includes(nameFilter.nameFilter.toLowerCase()))
+          .filter(filterPlanets)
           .map((element, index) => (
             <tr key={ index }>
               <td>{element.name}</td>

@@ -1,12 +1,17 @@
 import React, { useContext } from 'react';
-import FiltersContext from '../context/FiltersContext';
+import PlanetsContext from '../context/PlanetsContext';
 
 export default function Filters() {
-  const {
-    nameFilter,
-    columnFilter,
-    comparisonFilter,
-    valueFilter } = useContext(FiltersContext);
+  const { nameFilter,
+    filterOptions,
+    selected, setSelected,
+    selectedFilters, setSelectedFilters } = useContext(PlanetsContext);
+
+  const columnOptions = ['population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water'];
 
   return (
     <div>
@@ -14,32 +19,36 @@ export default function Filters() {
         type="text"
         data-testid="name-filter"
         value={ nameFilter.nameFilter }
-        onChange={ (e) => { nameFilter.setNameFilter(e.target.value); } }
+        onChange={ ({ target }) => { nameFilter.setNameFilter(target.value); } }
       />
       <label htmlFor="column-filter">
         Coluna
         <select
-          value={ columnFilter.interimValue }
-          onChange={ columnFilter.handleChange }
-          name="column-filter"
+          name="column"
           id="column-filter"
           data-testid="column-filter"
+          value={ selected.column }
+          onChange={ ({ target }) => {
+            setSelected({ ...selected, column: target.value });
+          } }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {columnOptions.filter(filterOptions).map((element) => (
+            <option value={ element } key={ element }>
+              {element}
+            </option>
+          ))}
         </select>
       </label>
       <label htmlFor="comparison-filter">
         Operador
         <select
-          value={ comparisonFilter.interimValue }
-          onChange={ comparisonFilter.handleChange }
+          name="comparison"
           id="comparison-filter"
-          name="comparison-filter"
           data-testid="comparison-filter"
+          value={ selected.comparison }
+          onChange={ ({ target }) => {
+            setSelected({ ...selected, comparison: target.value });
+          } }
         >
           <option value="maior que">maior que</option>
           <option value="menor que">menor que</option>
@@ -47,23 +56,62 @@ export default function Filters() {
         </select>
       </label>
       <input
-        value={ valueFilter.interimValue }
-        onChange={ valueFilter.handleChange }
+        name="value-filter"
+        id="value-filter"
         data-testid="value-filter"
         type="number"
+        value={ selected.value }
+        onChange={ ({ target }) => {
+          setSelected({ ...selected, value: target.value });
+        } }
       />
+
       <button
         data-testid="button-filter"
-        onClick={ () => {
-          columnFilter.setValue(columnFilter.interimValue);
-          comparisonFilter.setValue(comparisonFilter.interimValue);
-          valueFilter.setValue(valueFilter.interimValue);
+        onClick={ async () => {
+          setSelectedFilters([...selectedFilters, selected]);
+          setSelected({
+            column: 'population',
+            comparison: 'maior que',
+            value: 0,
+          });
         } }
       >
         Filtrar
-
       </button>
-
+      <button
+        data-testid="button-remove-filters"
+        onClick={ () => {
+          setSelectedFilters([]);
+          setSelected({
+            column: 'population',
+            comparison: 'maior que',
+            value: 0,
+          });
+        } }
+      >
+        Remover todas filtragens
+      </button>
+      {selectedFilters.map((filter, index) => (
+        <div data-testid="filter" key={ index }>
+          <button
+            onClick={ () => {
+              const cloneArray = [...selectedFilters];
+              cloneArray.splice(index, 1);
+              setSelectedFilters(cloneArray);
+            } }
+          >
+            𝙭
+          </button>
+          <span>
+            {filter.column}
+            {' '}
+            {filter.condition}
+            {' '}
+            {filter.value}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
