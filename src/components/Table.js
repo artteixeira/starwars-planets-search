@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PlanetsContext from '../context/PlanetsContext';
 
 export default function Table() {
-  const { planets, nameFilter, filterPlanets } = useContext(PlanetsContext);
+  const { planets, nameFilter, filterPlanets, sortPlanets } = useContext(PlanetsContext);
 
   return (
     <table>
@@ -28,9 +28,10 @@ export default function Table() {
           .filter((element) => element.name.toLowerCase()
             .includes(nameFilter.nameFilter.toLowerCase()))
           .filter(filterPlanets)
+          .sort(sortPlanets)
           .map((element, index) => (
             <tr key={ index }>
-              <td>{element.name}</td>
+              <td data-testid="planet-name">{element.name}</td>
               <td>{element.rotation_period}</td>
               <td>{element.orbital_period}</td>
               <td>{element.diameter}</td>

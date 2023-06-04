@@ -12,6 +12,14 @@ export default function PlanetsProvider({ children }) {
   });
   const [nameFilter, setNameFilter] = useState('');
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [order, setOrder] = useState({
+    column: 'population',
+    sort: 'ASC',
+  });
+  const [sortFilter, setSortFilter] = useState({
+    column: 'population',
+    sort: '',
+  });
 
   const fetchFunc = async () => {
     const response = await fetch('https://swapi.dev/api/planets');
@@ -49,6 +57,30 @@ export default function PlanetsProvider({ children }) {
     return filters.every((el) => el);
   };
 
+  const sortPlanets = (a, b) => {
+    const { column, sort } = sortFilter;
+    const first = -1;
+
+    const newA = a[column];
+    const newB = b[column];
+
+    if (sort && (newA === 'unknown' && newB !== 'unknown')) {
+      return 1;
+    }
+
+    if (sort && (newA !== 'unknown' && newB === 'unknown')) {
+      return first;
+    }
+
+    if (Number(newA) > Number(newB)) {
+      return sort === 'ASC' ? 1 : first;
+    }
+
+    if (Number(newA) < Number(newB)) {
+      return sort === 'ASC' ? first : 1;
+    }
+  };
+
   return (
     <PlanetsContext.Provider
       value={ {
@@ -60,6 +92,10 @@ export default function PlanetsProvider({ children }) {
         selectedFilters,
         setSelectedFilters,
         filterPlanets,
+        order,
+        setOrder,
+        sortPlanets,
+        setSortFilter,
       } }
     >
       {children}

@@ -5,7 +5,8 @@ export default function Filters() {
   const { nameFilter,
     filterOptions,
     selected, setSelected,
-    selectedFilters, setSelectedFilters } = useContext(PlanetsContext);
+    selectedFilters, setSelectedFilters,
+    order, setOrder, setSortFilter } = useContext(PlanetsContext);
 
   const columnOptions = ['population',
     'orbital_period',
@@ -65,7 +66,6 @@ export default function Filters() {
           setSelected({ ...selected, value: target.value });
         } }
       />
-
       <button
         data-testid="button-filter"
         onClick={ async () => {
@@ -78,6 +78,56 @@ export default function Filters() {
         } }
       >
         Filtrar
+      </button>
+      <label htmlFor="column-sort">
+        Ordenar
+        <select
+          name="column"
+          id="column-sort"
+          data-testid="column-sort"
+          value={ order.column }
+          onChange={ ({ target }) => {
+            setOrder({ ...order, column: target.value });
+          } }
+        >
+          {columnOptions.map((element) => (
+            <option value={ element } key={ element }>
+              {element}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label htmlFor="ASC">
+        Ascendente
+        <input
+          id="ASC"
+          name="sort"
+          data-testid="column-sort-input-asc"
+          type="radio"
+          value="ASC"
+          onChange={ ({ target }) => {
+            setOrder({ ...order, sort: target.value });
+          } }
+        />
+      </label>
+      <label htmlFor="DESC">
+        Descendente
+        <input
+          id="DESC"
+          name="sort"
+          data-testid="column-sort-input-desc"
+          type="radio"
+          value="DESC"
+          onChange={ ({ target }) => {
+            setOrder({ ...order, sort: target.value });
+          } }
+        />
+      </label>
+      <button
+        data-testid="column-sort-button"
+        onClick={ () => { setSortFilter(order); } }
+      >
+        Ordenar
       </button>
       <button
         data-testid="button-remove-filters"
