@@ -72,11 +72,11 @@ export default function PlanetsProvider({ children }) {
       return first;
     }
 
-    if (Number(newA) > Number(newB)) {
+    if (sort && Number(newA) > Number(newB)) {
       return sort === 'ASC' ? 1 : first;
     }
 
-    if (Number(newA) < Number(newB)) {
+    if (sort && Number(newA) < Number(newB)) {
       return sort === 'ASC' ? first : 1;
     }
   };

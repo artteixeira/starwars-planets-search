@@ -138,6 +138,10 @@ export default function Filters() {
             comparison: 'maior que',
             value: 0,
           });
+          setSortFilter({
+            column: 'population',
+            sort: '',
+          });
         } }
       >
         Remover todas filtragens
