@@ -36,4 +36,5 @@ test('Testa o filtro numérico', async () => {
   userEvent.click(button);
   planets = await screen.findAllByTestId('planet-name');
   expect(planets).toHaveLength(7);
-})
+});
+test('Testa o filtro ')
